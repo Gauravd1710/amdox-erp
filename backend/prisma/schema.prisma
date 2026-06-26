@@ -20,6 +20,8 @@ model Tenant {
 
   employees Employee[]
 
+  accounts Account[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -86,4 +88,37 @@ model Payroll {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Account {
+  id        String   @id @default(uuid())
+
+  name      String
+
+  type      String
+
+  balance   Float    @default(0)
+
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+
+  description String
+
+  amount      Float
+
+  type        String
+
+  accountId   String
+  account     Account @relation(fields: [accountId], references: [id])
+
+  createdAt   DateTime @default(now())
 }
