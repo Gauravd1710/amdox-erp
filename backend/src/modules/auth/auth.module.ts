@@ -1,15 +1,38 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import {
+  JwtModule,
+  type JwtModuleOptions,
+} from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: 'amdox-secret-key',
-      signOptions: {
-        expiresIn: '1d',
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (
+        configService: ConfigService,
+      ) => {
+        const expiresIn =
+          (configService.get<string>(
+            'JWT_EXPIRES_IN',
+          ) ??
+            '1d') as NonNullable<
+            JwtModuleOptions['signOptions']
+          >['expiresIn'];
+
+        return {
+          secret:
+            configService.getOrThrow<string>(
+              'JWT_SECRET',
+            ),
+          signOptions: {
+            expiresIn,
+          },
+        };
       },
     }),
   ],
