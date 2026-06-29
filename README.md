@@ -1,4 +1,5 @@
 # AI-Powered Cloud ERP Suite
+Creating a MVP with 5 features currently.
 
 Internship Project
 
