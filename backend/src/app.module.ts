@@ -8,6 +8,7 @@ import { TenantModule } from './modules/tenant/tenant.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { PayrollModule } from './modules/payroll/payroll.module';
 import { FinanceModule } from './modules/finance/finance.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FinanceModule } from './modules/finance/finance.module';
     EmployeesModule,
     PayrollModule,
     FinanceModule,
+    InventoryModule,
   ],
 })
 export class AppModule {}
