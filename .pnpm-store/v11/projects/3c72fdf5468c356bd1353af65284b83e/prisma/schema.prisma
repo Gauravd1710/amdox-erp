@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+
+  users     User[]
+
+  employees Employee[]
+
+  accounts Account[]
+
+  inventoryItems InventoryItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+
+  role      String   @default("EMPLOYEE")
+
+  tenantId  String?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id          String   @id @default(uuid())
+
+  firstName   String
+  lastName    String
+
+  email       String   @unique
+
+  phone       String?
+
+  designation String
+
+  department  String
+
+  salary      Float
+
+  payrolls  Payroll[]
+
+  joiningDate DateTime
+
+  status      String   @default("ACTIVE")
+
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Payroll {
+  id          String   @id @default(uuid())
+
+  month       Int
+  year        Int
+
+  basicSalary Float
+
+  bonus       Float @default(0)
+
+  deductions  Float @default(0)
+
+  netSalary   Float
+
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Account {
+  id        String   @id @default(uuid())
+
+  name      String
+
+  type      String
+
+  balance   Float    @default(0)
+
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+
+  description String
+
+  amount      Float
+
+  type        String
+
+  accountId   String
+  account     Account @relation(fields: [accountId], references: [id])
+
+  createdAt   DateTime @default(now())
+}
+
+model InventoryItem {
+  id          String   @id @default(uuid())
+
+  name        String
+  sku         String   @unique
+  category    String
+
+  quantity    Int
+  unitPrice   Float
+
+  tenantId    String
+  tenant      Tenant @relation(fields: [tenantId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
