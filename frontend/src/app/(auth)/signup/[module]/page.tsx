@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Loader2
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 
 // Module configurations
@@ -24,7 +25,7 @@ const moduleConfig: Record<string, {
   color: string;
   textColor: string;
   borderHover: string;
-  icon: any;
+  icon: LucideIcon;
 }> = {
   admin: {
     name: "System Administration",
@@ -61,23 +62,24 @@ export default function SignupPage({ params }: { params: Promise<{ module: strin
   const router = useRouter();
 
   const config = moduleConfig[module];
-
-  // If the module configuration does not exist, redirect home
-  if (!config) {
-    React.useEffect(() => {
-      router.push("/");
-    }, [router]);
-    return null;
-  }
-
-  const ModuleIcon = config.icon;
-
-  // Form states
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (!config) {
+      router.push("/");
+    }
+  }, [config, router]);
+
+  // If the module configuration does not exist, redirect home
+  if (!config) {
+    return null;
+  }
+
+  const ModuleIcon = config.icon;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

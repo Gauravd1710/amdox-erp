@@ -45,10 +45,10 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   // placeholder — will be replaced with useAuthStore() once backend is ready
-  const module = "admin";
-  const links = sidebarLinks[module as keyof typeof sidebarLinks] ?? sidebarLinks.admin;
-  const color = moduleColors[module] ?? moduleColors.admin;
-  const ModuleIcon = moduleIcons[module] ?? Shield;
+  const activeModule = "admin";
+  const links = sidebarLinks[activeModule as keyof typeof sidebarLinks] ?? sidebarLinks.admin;
+  const color = moduleColors[activeModule] ?? moduleColors.admin;
+  const ModuleIcon = moduleIcons[activeModule] ?? Shield;
 
   return (
     <div className="flex min-h-screen bg-white text-slate-800 font-sans">
@@ -76,7 +76,7 @@ export default function DashboardLayout({
           <div className={`flex items-center gap-2.5 bg-gradient-to-tr ${color} rounded-xl px-3 py-2.5 shadow-sm`}>
             <ModuleIcon className="h-5 w-5 text-white shrink-0" />
             <span className="text-xs font-bold text-white truncate">
-              {module.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+              {activeModule.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
             </span>
           </div>
         </div>
